@@ -103,10 +103,13 @@ void loop()
     Gas.score= Gas.count * Gas.point;
     Titanium.score= Titanium.count * Titanium.point;
     Diamond.score= Diamond.count * Diamond.point;
-    Serial.print("Water:");Serial.print("\t");Serial.println(Water.score);
-    Serial.print("Gas:");Serial.print("\t");Serial.println(Gas.score);
+    Finalscore=Water.score+Gas.score+Titanium.score+Diamond.score;
+    Serial.print("Water:");Serial.print("\t");Serial.print("\t");Serial.println(Water.score);
+    Serial.print("Gas:");Serial.print("\t");Serial.print("\t");Serial.println(Gas.score);
     Serial.print("Titanium:");Serial.print("\t");Serial.println(Titanium.score);
     Serial.print("Diamond:");Serial.print("\t");Serial.println(Diamond.score);
+    Serial.println("------------------------------");
+    Serial.print("Finalscore:");Serial.print("\t");Serial.println(Finalscore);
 }
 
 int readBlock(int blockNumber, byte arrayAddress[]) 
