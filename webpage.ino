@@ -16,6 +16,8 @@
 #include <MFRC522.h>
 #define SS_PIN D8 
 #define RST_PIN D3  
+byte c=false;
+int x = true;
 MFRC522 mfrc522(SS_PIN, RST_PIN);       
 MFRC522::MIFARE_Key key;
 const IPAddress AP_IP(192, 168, 1, 1);
@@ -97,25 +99,43 @@ void loop() {
   lastswitchState=switchState;
   if(switchState == HIGH){
     if (  mfrc522.PICC_IsNewCardPresent() && mfrc522.PICC_ReadCardSerial()) {
-   if (mfrc522.uid.uidByte[0] != nuidPICC[0] || 
-    mfrc522.uid.uidByte[1] != nuidPICC[1] || 
-    mfrc522.uid.uidByte[2] != nuidPICC[2] || 
-    mfrc522.uid.uidByte[3] != nuidPICC[3] ){
-      for (byte i = 0; i < 4; i++) {
-      nuidPICC[i] = mfrc522.uid.uidByte[i];
+    for (byte i=0;i<11;i++){
+      for (byte j=0;j<1;j++){
+        if (memuid[i][j+0] == mfrc522.uid.uidByte[j+0] &&
+            memuid[i][j+1] == mfrc522.uid.uidByte[j+1] &&
+            memuid[i][j+2] == mfrc522.uid.uidByte[j+2] &&
+            memuid[i][j+3] == mfrc522.uid.uidByte[j+3]){
+          Serial.println("Same");
+          c= false;
+          x= false;
+          }
+        else {
+          if(x == false){
+              break;
+            }
+            else{
+              c=true;
+              Serial.println("Not same");
+              }
+            }
+      } 
     }
-//    for(a=0;a<4;a++){
-//       memuid[b][a]=nuidPICC[a];
-//    }
-//    b++;
-//    Serial.println(b);
-//    for (int i = 0; i < 11; i++) {
-//        for (int j = 0; j < 4; j++) {
-//            Serial.print(memuid[i][j]);
-//        }
-//        Serial.print("\n");
-//    }
-  readBlock(block, readbackblock);
+    x= true;
+    if ( c == true ){
+    for(a=0;a<4;a++){
+       memuid[b][a]=mfrc522.uid.uidByte[a];
+    }
+    b++;
+        for(int i=0; i<11; i++) {
+      for(int j=0;j<4;j++) {
+         Serial.print(memuid[i][j]);
+         if(j==4){
+            Serial.print("\n");
+         }
+      }
+   }
+        Serial.print("\n");
+        readBlock(block, readbackblock);
   Serial.print("read block: ");
   for (int j=0 ; j<16 ; j++)
   {
@@ -163,11 +183,13 @@ void loop() {
     Serial.print("Water:");Serial.print("\t");Serial.print("\t");Serial.println(Water.score);
     Serial.print("Gas:");Serial.print("\t");Serial.print("\t");Serial.println(Gas.score);
     Serial.print("Titanium:");Serial.print("\t");Serial.println(Titanium.score);
-    Serial.print("Diamond:");Serial.print("\t");Serial.print("\t");Serial.println(Diamond.score);
+    Serial.print("Diamond:");Serial.print("\t");Serial.println(Diamond.score);
     Serial.println("------------------------------");
     Serial.print("Finalscore:");Serial.print("\t");Serial.println(Finalscore);
     EEPROM.put(Finalscore_address,Finalscore); 
     EEPROM.commit();
+    
+        c= false;
     }
   // Halt PICC
   mfrc522.PICC_HaltA();
@@ -241,10 +263,10 @@ void startWebServer(int state) {
       WEB_SERVER.send(200, "text/html", makePage("MARS-ROVER", s));
     });
      WEB_SERVER.on("/setup", []() {
-//      for (int i = 0; i < 64; ++i) {
-//        EEPROM.put(i, ascii_space);
-//        EEPROM.commit();
-//      }
+     for (int i = 0; i < 64; ++i) {
+        EEPROM.put(i, ascii_space);
+        EEPROM.commit();
+      }
       String Team_Name = urlDecode(WEB_SERVER.arg("Team_Name"));
       Serial.print("Team_Name: ");
       Serial.println(Team_Name);
@@ -375,7 +397,7 @@ void startWebServer(int state) {
         EEPROM.commit();
       }
      String s= "<h4>Memory Erased</h4>";
-     s+= "<p>Press reset and slide switch for next team to play.</p>";
+     s+= "<p>slide switch and press reset for next team to play.</p>";
       WEB_SERVER.send(200, "text/html", makePage("Memory reset", s));
     });
     }
