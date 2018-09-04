@@ -255,7 +255,7 @@ void startWebServer(int state) {
     Serial.println(WiFi.softAPIP());
     // Settings Page
     WEB_SERVER.on("/", []() {
-      String s = "<h2>Player Details</h2>";
+      String s= "<h2>Player Details</h2>";
       s +="<p>Enter the Team_Name and submit.</p>";
       s += "<form method=\"get\" action=\"setup\">";
       s +="Team_Name: <input name=\"Team_Name\" length=64 type=\"Team_Name\"><br><br>";
@@ -440,6 +440,7 @@ String makePage(String title, String contents) {
   s += "</title></head><body>";
   s += "<header><p>" + DEVICE_TITLE + "</p></header>";
   s += "<div class=\"content-body\">";
+  s += "<img src='https://curiositygym.com/wp-content/uploads/2016/08/CG8PC.png' alt='Lamp' width='278' height='100'>";
   s += contents;
   s += "</div>";
   s += "</body></html>";
