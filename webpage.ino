@@ -7,7 +7,8 @@
  * SDA -> D8
  * Switch -> D2
  */
- #include <ESP8266WiFi.h>
+#include <Adafruit_NeoPixel.h>
+#include <ESP8266WiFi.h>
 #include <DNSServer.h>
 #include <WiFiClient.h>
 #include <EEPROM.h>
@@ -15,9 +16,11 @@
 #include <SPI.h>
 #include <MFRC522.h>
 #define SS_PIN D8 
-#define RST_PIN D3  
+#define RST_PIN D3 
+#define PIN D1 
 byte c=false;
 int x = true;
+Adafruit_NeoPixel strip = Adafruit_NeoPixel(3, PIN, NEO_GRB + NEO_KHZ800);
 MFRC522 mfrc522(SS_PIN, RST_PIN);       
 MFRC522::MIFARE_Key key;
 const IPAddress AP_IP(192, 168, 1, 1);
@@ -50,7 +53,8 @@ struct Resource Titanium;
 struct Resource Diamond;
 byte nuidPICC[4];
 byte memuid[11][4];
-
+int q=0;
+unsigned long w;
 
 
 void setup() {
@@ -86,9 +90,20 @@ for (byte i = 0; i < 6; i++)
   {
     key.keyByte[i] = 0xFF;
   }
+strip.begin();
+strip.show(); // Initialize all pixels to 'off'
 }
 
 void loop() {
+  if(q==1 && (millis()-w>3000)){
+  strip.setPixelColor(0, 0, 0, 0);
+  strip.show();
+  strip.setPixelColor(1, 0, 0, 0);
+  strip.show();
+  strip.setPixelColor(2, 0, 0, 0);
+  strip.show();
+  q=0;
+  }
   switchState=digitalRead(D2);
   if(switchState != lastswitchState){
     setupMode();
@@ -122,6 +137,14 @@ void loop() {
     }
     x= true;
     if ( c == true ){
+      strip.setPixelColor(0, 255, 0, 0);
+      strip.show();
+      strip.setPixelColor(1, 255, 0, 0);
+      strip.show();
+      strip.setPixelColor(2, 255, 0, 0);
+      strip.show();
+      q=1;
+      w=millis();
     for(a=0;a<4;a++){
        memuid[b][a]=mfrc522.uid.uidByte[a];
     }
