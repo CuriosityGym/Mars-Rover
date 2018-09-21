@@ -75,31 +75,31 @@ void motor(int LeftMotor,int RightMotor){
 //  Serial.println(angle); 
 //  myservo.write(angle);           
   if(LeftMotor==0){
-    m.motor(2,BRAKE,LeftMotor);
-    m.motor(1,BRAKE,LeftMotor);
+    m.motor(3,BRAKE,LeftMotor);
+    m.motor(4,BRAKE,LeftMotor);
     }
     
   else if(LeftMotor>0){
-    m.motor(2,FORWARD,LeftMotor);
-    m.motor(1,FORWARD,LeftMotor);
+    m.motor(3,FORWARD,LeftMotor);
+    m.motor(4,FORWARD,LeftMotor);
     }
     
   else{
-    m.motor(2,BACKWARD,abs(LeftMotor));
-    m.motor(1,BACKWARD,abs(LeftMotor));
+    m.motor(3,BACKWARD,abs(LeftMotor));
+    m.motor(4,BACKWARD,abs(LeftMotor));
     }
 
   if(RightMotor==0){
-    m.motor(3,BRAKE,RightMotor);
-     m.motor(4,BRAKE,RightMotor);
+    m.motor(2,BRAKE,RightMotor);
+     m.motor(1,BRAKE,RightMotor);
     }
   else if(RightMotor>0){
-    m.motor(3,FORWARD,RightMotor);
-    m.motor(4,FORWARD,RightMotor);
+    m.motor(2,FORWARD,RightMotor);
+    m.motor(1,FORWARD,RightMotor);
     }
   else{
-    m.motor(3,BACKWARD,abs(RightMotor));
-    m.motor(4,BACKWARD,abs(RightMotor));
+    m.motor(2,BACKWARD,abs(RightMotor));
+    m.motor(1,BACKWARD,abs(RightMotor));
     }
 }
   
