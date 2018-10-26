@@ -9,15 +9,22 @@ int ch1,ch2;
 
 void setup() {
   pinMode(A1, INPUT);
-  pinMode(A0, INPUT); 
-//  pinMode(A5, INPUT);
+  pinMode(A0, INPUT);
+  pinMode(A4, INPUT_PULLUP);  // Limit SW1
+  pinMode(A5, INPUT_PULLUP);  // Limit SW2
   Serial.begin(9600);
 //  myservo.attach(9);
 //  myservo.write(90); 
 }
 
 void loop() {
+  //Serial.print(!(digitalRead(A4)));
+  //Serial.print("\t");
+  //Serial.println(!(digitalRead(A5)));
   //ch6 = pulseIn(A5, HIGH);
+  if((!(digitalRead(A4))) || (!(digitalRead(A5)))){
+    Serial.println("HIT");
+    }
   ch2 = pulseIn(A1, HIGH);
   ch1 = pulseIn(A0, HIGH); 
 
@@ -68,10 +75,10 @@ int pwm(int pulse){
 void motor(int LeftMotor,int RightMotor){
   LeftMotor=constrain(LeftMotor,-255,255);
   RightMotor=constrain(RightMotor,-255,255);
-  Serial.print(LeftMotor);
-  Serial.print("\t");
-  Serial.print(RightMotor); 
-  Serial.print("\t");
+  //Serial.print(LeftMotor);
+  //Serial.print("\t");
+  //Serial.print(RightMotor); 
+  //Serial.print("\t");
 //  Serial.println(angle); 
 //  myservo.write(angle);           
   if(LeftMotor==0){
@@ -102,5 +109,4 @@ void motor(int LeftMotor,int RightMotor){
     m.motor(1,BACKWARD,abs(RightMotor));
     }
 }
-  
   
